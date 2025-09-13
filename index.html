@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Porra Wroclaw 2025-2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Fondo general con la ilustración abstracta */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('https://img.freepik.com/free-vector/sports-games-abstract-concept-illustration_11667658.htm') no-repeat center center fixed;
-      background-size: cover;
-      opacity: 0.06; /* Muy sutil */
-      z-index: -1;
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background:url('https://img.freepik.com/free-vector/sports-games-abstract-concept-illustration_11667658.htm') no-repeat center/cover fixed;
+      opacity:.06; z-index:-1;
     }
   </style>
 </head>
@@ -25,28 +20,35 @@
   <!-- HERO -->
   <section class="relative bg-gray-900 text-white">
     <div class="absolute inset-0">
-      <img src="https://img.freepik.com/free-photo/futuristic-soccer-field-illustration_23-2151539688.jpg" 
+      <img src="https://img.freepik.com/free-photo/futuristic-soccer-field-illustration_23-2151539688.jpg"
            alt="Hero background" class="w-full h-full object-cover opacity-70">
       <div class="absolute inset-0 bg-black/60"></div>
     </div>
-
-    <div class="relative container mx-auto px-6 py-32 text-center">
-      <h1 class="text-5xl md:text-7xl font-extrabold text-indigo-400">
-        Porra Wroclaw 2025-2026
-      </h1>
+    <div class="relative container mx-auto px-6 py-24 text-center">
+      <h1 class="text-5xl md:text-7xl font-extrabold text-indigo-400">Porra Wroclaw 2025-2026</h1>
+      <!-- Selector de jornada -->
+      <div class="mt-8 flex items-center justify-center gap-3">
+        <label for="selectJornada" class="text-lg">Jornada:</label>
+        <select id="selectJornada" class="bg-white text-gray-900 rounded-md px-4 py-2 shadow">
+          <option value="J3" selected>J3</option>
+          <option value="J2">J2</option>
+          <option value="J1">J1</option>
+        </select>
+      </div>
     </div>
   </section>
 
-  <!-- VISUALIZACIÓN EXTRA -->
+  <!-- KPI Bote -->
   <section class="container mx-auto px-6 py-10 text-center">
     <div class="bg-green-100 border border-green-300 rounded-lg shadow-md p-6 inline-block">
       <h3 class="text-2xl font-bold text-green-800">💰 Bote Total Acumulado</h3>
       <p id="boteTotal" class="text-4xl font-extrabold text-green-700 mt-2"></p>
+      <p class="text-sm text-green-800/80 mt-1" id="subtituloJornada"></p>
     </div>
   </section>
 
   <!-- GRÁFICOS -->
-  <section id="graficos" class="container mx-auto px-6 py-16">
+  <section id="graficos" class="container mx-auto px-6 pb-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
       <div class="bg-white shadow-lg rounded-lg p-6">
         <h3 class="text-xl font-semibold mb-4 text-center">Ranking por Puntos Totales</h3>
@@ -59,9 +61,9 @@
     </div>
   </section>
 
-  <!-- TABLA DE CLASIFICACIÓN -->
-  <section id="tabla" class="container mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold text-center mb-10">Clasificación</h2>
+  <!-- TABLA -->
+  <section id="tabla" class="container mx-auto px-6 py-10">
+    <h2 class="text-3xl font-bold text-center mb-6">Clasificación</h2>
     <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
       <table id="ligaTable" class="w-full text-left border border-gray-300 divide-y divide-gray-300">
         <thead class="bg-indigo-500 text-white cursor-pointer divide-x divide-gray-300">
@@ -73,86 +75,150 @@
             <th class="py-3 px-4" onclick="sortTable(4)">Bote Acumulado</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200 divide-x">
-          <tr><td>Oscar</td><td>4</td><td>10</td><td>0</td><td>10</td></tr>
-          <tr><td>Eneko</td><td>3</td><td>8</td><td>5</td><td>15</td></tr>
-          <tr><td>Gotzon</td><td>3</td><td>10</td><td>5</td><td>10</td></tr>
-          <tr><td>Txus</td><td>2</td><td>14</td><td>5</td><td>5</td></tr>
-          <tr><td>Manu</td><td>2</td><td>11</td><td>5</td><td>10</td></tr>
-          <tr><td>Ivan</td><td>2</td><td>8</td><td>5</td><td>15</td></tr>
-          <tr><td>Pablo</td><td>0</td><td>2</td><td>10</td><td>25</td></tr>
-          <tr><td>Wilby</td><td>0</td><td>7</td><td>10</td><td>20</td></tr>
-          <tr><td>Sergi</td><td>0</td><td>6</td><td>10</td><td>20</td></tr>
-          <tr><td>Fons</td><td>0</td><td>6</td><td>10</td><td>20</td></tr>
-          <tr><td>Alex</td><td>0</td><td>8</td><td>10</td><td>20</td></tr>
-          <tr><td>Carlos</td><td>0</td><td>4</td><td>10</td><td>25</td></tr>
-          <tr><td>Jesus</td><td>0</td><td>7</td><td>10</td><td>20</td></tr>
-        </tbody>
+        <tbody class="divide-y divide-gray-200 divide-x" id="tbodyLiga"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="bg-gray-900 text-gray-400 py-6 text-center">
     <p>© 2025 Porra Wroclaw 2025-2026</p>
   </footer>
 
-  <!-- SCRIPTS -->
   <script>
-    let data = [
-      { nombre: "Oscar", puntos: 10, bote: 10 },
-      { nombre: "Eneko", puntos: 8, bote: 15 },
-      { nombre: "Gotzon", puntos: 10, bote: 10 },
-      { nombre: "Txus", puntos: 14, bote: 5 },
-      { nombre: "Manu", puntos: 11, bote: 10 },
-      { nombre: "Ivan", puntos: 8, bote: 15 },
-      { nombre: "Pablo", puntos: 2, bote: 25 },
-      { nombre: "Wilby", puntos: 7, bote: 20 },
-      { nombre: "Sergi", puntos: 6, bote: 20 },
-      { nombre: "Fons", puntos: 6, bote: 20 },
-      { nombre: "Alex", puntos: 8, bote: 20 },
-      { nombre: "Carlos", puntos: 4, bote: 25 },
-      { nombre: "Jesus", puntos: 7, bote: 20 },
-    ];
+    // =========================
+    // Datos históricos por jornada
+    // campos: nombre, pj (Puntos Jornada), pt (Puntos Totales),
+    //         bj (Bote Jornada / PLN jornada), bt (Bote Total)
+    // =========================
+    const historico = {
+      J1: [
+        {nombre:"Fons",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Carlos",pj:0,pt:0,bj:10,bt:10},
+        {nombre:"Sergi",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Wilby",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Pablo",pj:0,pt:0,bj:10,bt:10},
+        {nombre:"Alex",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Gotzon",pj:5,pt:5,bj:0,bt:0},
+        {nombre:"Eneko",pj:3,pt:3,bj:5,bt:5},
+        {nombre:"Manu",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Jesus",pj:5,pt:5,bj:0,bt:0},
+        {nombre:"Ivan",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Oscar",pj:2,pt:2,bj:5,bt:5},
+        {nombre:"Txus",pj:5,pt:5,bj:0,bt:0},
+      ],
+      J2: [
+        {nombre:"Fons",pj:4,pt:6,bj:5,bt:10},
+        {nombre:"Carlos",pj:4,pt:4,bj:5,bt:15},
+        {nombre:"Sergi",pj:2,pt:4,bj:5,bt:10},
+        {nombre:"Wilby",pj:5,pt:7,bj:5,bt:10},
+        {nombre:"Pablo",pj:2,pt:2,bj:5,bt:15},
+        {nombre:"Alex",pj:4,pt:6,bj:5,bt:10},
+        {nombre:"Gotzon",pj:2,pt:7,bj:5,bt:5},
+        {nombre:"Eneko",pj:2,pt:5,bj:5,bt:10},
+        {nombre:"Manu",pj:7,pt:9,bj:0,bt:5},
+        {nombre:"Jesus",pj:0,pt:7,bj:10,bt:10},
+        {nombre:"Ivan",pj:4,pt:6,bj:5,bt:10},
+        {nombre:"Oscar",pj:4,pt:6,bj:5,bt:10},
+        {nombre:"Txus",pj:7,pt:12,bj:0,bt:0},
+      ],
+      J3: [
+        {nombre:"Fons",pj:0,pt:6,bj:10,bt:20},
+        {nombre:"Carlos",pj:0,pt:4,bj:10,bt:25},
+        {nombre:"Sergi",pj:0,pt:6,bj:10,bt:20},
+        {nombre:"Wilby",pj:0,pt:7,bj:10,bt:20},
+        {nombre:"Pablo",pj:0,pt:2,bj:10,bt:25},
+        {nombre:"Alex",pj:0,pt:8,bj:10,bt:20},
+        {nombre:"Gotzon",pj:3,pt:10,bj:5,bt:10},
+        {nombre:"Eneko",pj:3,pt:8,bj:5,bt:15},
+        {nombre:"Manu",pj:2,pt:11,bj:5,bt:10},
+        {nombre:"Jesus",pj:0,pt:7,bj:10,bt:20},
+        {nombre:"Ivan",pj:2,pt:8,bj:5,bt:15},
+        {nombre:"Oscar",pj:4,pt:10,bj:0,bt:10},
+        {nombre:"Txus",pj:2,pt:14,bj:5,bt:5},
+      ]
+    };
 
-    // Bote total
-    let boteTotal = data.reduce((sum, item) => sum + item.bote, 0);
-    document.getElementById("boteTotal").innerText = boteTotal + " zł";
+    // Estado Chart.js
+    let chartPuntos, chartBote;
 
-    // Ranking por puntos
-    let ranking = [...data].sort((a, b) => b.puntos - a.puntos);
-    let labelsRanking = ranking.map((d, i) => `${i+1}. ${d.nombre}`);
-    let valoresPuntos = ranking.map(d => d.puntos);
-    let valoresBote = ranking.map(d => d.bote);
+    // Helpers
+    const tbody = document.getElementById("tbodyLiga");
+    const boteTotalEl = document.getElementById("boteTotal");
+    const subtituloJornada = document.getElementById("subtituloJornada");
 
-    // Gráficos
-    new Chart(document.getElementById('chartPuntos'), {
-      type: 'bar',
-      data: { labels: labelsRanking, datasets: [{ label: 'Puntos Totales', data: valoresPuntos, backgroundColor: 'rgba(99,102,241,0.7)', borderColor: 'rgba(99,102,241,1)', borderWidth: 1 }] },
-      options: { responsive: true, scales: { y: { beginAtZero: true } } }
-    });
+    function render(jornadaKey){
+      const datos = historico[jornadaKey];
 
-    new Chart(document.getElementById('chartBote'), {
-      type: 'bar',
-      data: { labels: labelsRanking, datasets: [{ label: 'Bote Acumulado (zł)', data: valoresBote, backgroundColor: 'rgba(16,185,129,0.7)', borderColor: 'rgba(16,185,129,1)', borderWidth: 1 }] },
-      options: { responsive: true, scales: { y: { beginAtZero: true } } }
-    });
+      // ---- Tabla ----
+      tbody.innerHTML = datos
+        .map(d => `<tr>
+          <td class="py-2 px-4">${d.nombre}</td>
+          <td class="py-2 px-4">${d.pj}</td>
+          <td class="py-2 px-4">${d.pt}</td>
+          <td class="py-2 px-4">${d.bj}</td>
+          <td class="py-2 px-4">${d.bt}</td>
+        </tr>`).join("");
 
-    // Ordenar tabla
-    function sortTable(n) {
-      let table = document.getElementById("ligaTable");
-      let rows = Array.from(table.rows).slice(1);
-      let isNumeric = !isNaN(rows[0].cells[n].innerText.trim());
+      // ---- KPI Bote ----
+      const totalBote = datos.reduce((s,d)=>s+d.bt,0);
+      boteTotalEl.textContent = `${totalBote} zł`;
+      subtituloJornada.textContent = `Acumulado hasta ${jornadaKey}`;
 
-      rows.sort((a, b) => {
-        let x = a.cells[n].innerText.trim();
-        let y = b.cells[n].innerText.trim();
-        if (isNumeric) return Number(y) - Number(x);
-        else return x.localeCompare(y);
-      });
-      rows.forEach(row => table.tBodies[0].appendChild(row));
+      // ---- Gráficos ----
+      // ordenamos por puntos totales para etiquetas
+      const ranking = [...datos].sort((a,b)=>b.pt-a.pt);
+      const labels = ranking.map((d,i)=>`${i+1}. ${d.nombre}`);
+      const valoresPuntos = ranking.map(d=>d.pt);
+      const valoresBote  = ranking.map(d=>d.bt);
+
+      // Crear o actualizar gráfico de puntos
+      if(chartPuntos){
+        chartPuntos.data.labels = labels;
+        chartPuntos.data.datasets[0].data = valoresPuntos;
+        chartPuntos.update();
+      }else{
+        chartPuntos = new Chart(document.getElementById('chartPuntos'), {
+          type:'bar',
+          data:{ labels, datasets:[{ label:'Puntos Totales', data:valoresPuntos, backgroundColor:'rgba(99,102,241,0.7)', borderColor:'rgba(99,102,241,1)', borderWidth:1 }]},
+          options:{ responsive:true, scales:{y:{beginAtZero:true}} }
+        });
+      }
+
+      // Crear o actualizar gráfico de bote
+      if(chartBote){
+        chartBote.data.labels = labels;
+        chartBote.data.datasets[0].data = valoresBote;
+        chartBote.update();
+      }else{
+        chartBote = new Chart(document.getElementById('chartBote'), {
+          type:'bar',
+          data:{ labels, datasets:[{ label:'Bote Acumulado (zł)', data:valoresBote, backgroundColor:'rgba(16,185,129,0.7)', borderColor:'rgba(16,185,129,1)', borderWidth:1 }]},
+          options:{ responsive:true, scales:{y:{beginAtZero:true}} }
+        });
+      }
     }
-  </script>
 
+    // Ordenación de la tabla (mantiene jornada actual)
+    function sortTable(n){
+      const table = document.getElementById("ligaTable");
+      const rows = Array.from(table.tBodies[0].rows);
+      const isNumeric = !isNaN(rows[0].cells[n].innerText.trim());
+
+      rows.sort((a,b)=>{
+        let x=a.cells[n].innerText.trim(), y=b.cells[n].innerText.trim();
+        return isNumeric ? Number(y)-Number(x) : x.localeCompare(y);
+      });
+      rows.forEach(r=>table.tBodies[0].appendChild(r));
+    }
+    window.sortTable = sortTable;
+
+    // Listener selector
+    const select = document.getElementById("selectJornada");
+    select.addEventListener("change", ()=>render(select.value));
+
+    // Render inicial
+    render(select.value);
+  </script>
 </body>
 </html>
+
