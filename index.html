@@ -64,6 +64,12 @@
   <!-- TABLA -->
   <section id="tabla" class="container mx-auto px-6 py-10">
     <h2 class="text-3xl font-bold text-center mb-6">Clasificación</h2>
+    <p class="text-sm text-gray-500 mb-4 text-center">
+      Código cromático: <span class="text-emerald-700 font-medium">Top 3</span>, 
+      <span class="text-slate-600 font-medium">4º–5º</span>, 
+      <span class="text-rose-700 font-medium">6º+</span>. 
+      El “Bote Acumulado” usa degradado rojo proporcional.
+    </p>
     <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
       <table id="ligaTable" class="w-full text-left border border-gray-300 divide-y divide-gray-300">
         <thead class="bg-indigo-500 text-white cursor-pointer divide-x divide-gray-300">
@@ -87,8 +93,6 @@
   <script>
     // =========================
     // Datos históricos por jornada
-    // campos: nombre, pj (Puntos Jornada), pt (Puntos Totales),
-    //         bj (Bote Jornada / PLN jornada), bt (Bote Total)
     // =========================
     const historico = {
       J1: [
@@ -141,69 +145,109 @@
     // Estado Chart.js
     let chartPuntos, chartBote;
 
-    // Helpers
     const tbody = document.getElementById("tbodyLiga");
     const boteTotalEl = document.getElementById("boteTotal");
     const subtituloJornada = document.getElementById("subtituloJornada");
 
+    // Helpers de color
+    function colorPorPosicion(idx) {
+      if (idx <= 2) {        // top 3
+        return {bgClass: 'bg-emerald-100', textClass:'text-emerald-900', fill:'rgba(16,185,129,0.75)', stroke:'rgba(16,185,129,1)'};
+      } else if (idx <= 4) { // 4º y 5º
+        return {bgClass: 'bg-slate-100',   textClass:'text-slate-800',   fill:'rgba(148,163,184,0.75)', stroke:'rgba(100,116,139,1)'};
+      }
+      return   {bgClass: 'bg-rose-100',    textClass:'text-rose-900',    fill:'rgba(244,63,94,0.75)',  stroke:'rgba(225,29,72,1)'};
+    }
+    function estiloBote(bt, maxBt) {
+      const t = maxBt ? Math.max(0, Math.min(1, bt / maxBt)) : 0;
+      const light = 95 - 40 * t;
+      const bg = `hsl(0 85% ${light}%)`;
+      const txt = (light < 68) ? '#fff' : '#7f1d1d';
+      return `background:${bg};color:${txt};`;
+    }
+
     function render(jornadaKey){
       const datos = historico[jornadaKey];
-
-      // ---- Tabla ----
-      tbody.innerHTML = datos
-        .map(d => `<tr>
-          <td class="py-2 px-4">${d.nombre}</td>
-          <td class="py-2 px-4">${d.pj}</td>
-          <td class="py-2 px-4">${d.pt}</td>
-          <td class="py-2 px-4">${d.bj}</td>
-          <td class="py-2 px-4">${d.bt}</td>
-        </tr>`).join("");
-
-      // ---- KPI Bote ----
       const totalBote = datos.reduce((s,d)=>s+d.bt,0);
       boteTotalEl.textContent = `${totalBote} zł`;
       subtituloJornada.textContent = `Acumulado hasta ${jornadaKey}`;
 
-      // ---- Gráficos ----
-      // ordenamos por puntos totales para etiquetas
-      const ranking = [...datos].sort((a,b)=>b.pt-a.pt);
-      const labels = ranking.map((d,i)=>`${i+1}. ${d.nombre}`);
-      const valoresPuntos = ranking.map(d=>d.pt);
-      const valoresBote  = ranking.map(d=>d.bt);
+      const rankingPorPuntos = [...datos].sort((a,b)=>b.pt-a.pt);
+      const maxBote = Math.max(...datos.map(d=>d.bt));
+      const posPorNombre = Object.fromEntries(rankingPorPuntos.map((d,i)=>[d.nombre,i]));
 
-      // Crear o actualizar gráfico de puntos
+      // Tabla
+      tbody.innerHTML = datos.map(d=>{
+        const idx = posPorNombre[d.nombre];
+        const col = colorPorPosicion(idx);
+        const estiloBt = estiloBote(d.bt, maxBote);
+        return `
+          <tr class="${col.bgClass}">
+            <td class="py-2 px-4 ${col.textClass} font-medium">${d.nombre}</td>
+            <td class="py-2 px-4 ${col.textClass}">${d.pj}</td>
+            <td class="py-2 px-4 ${col.textClass}">${d.pt}</td>
+            <td class="py-2 px-4 ${col.textClass}">${d.bj}</td>
+            <td class="py-2 px-4 text-center font-semibold" style="${estiloBt}">${d.bt}</td>
+          </tr>`;
+      }).join("");
+
+      // Gráficos
+      const labels = rankingPorPuntos.map((d,i)=>`${i+1}. ${d.nombre}`);
+      const valoresPuntos = rankingPorPuntos.map(d=>d.pt);
+      const valoresBote  = rankingPorPuntos.map(d=>d.bt);
+      const fillsPuntos  = rankingPorPuntos.map((_,i)=>colorPorPosicion(i).fill);
+      const strokesPuntos= rankingPorPuntos.map((_,i)=>colorPorPosicion(i).stroke);
+
       if(chartPuntos){
         chartPuntos.data.labels = labels;
         chartPuntos.data.datasets[0].data = valoresPuntos;
+        chartPuntos.data.datasets[0].backgroundColor = fillsPuntos;
+        chartPuntos.data.datasets[0].borderColor = strokesPuntos;
         chartPuntos.update();
-      }else{
+      } else {
         chartPuntos = new Chart(document.getElementById('chartPuntos'), {
           type:'bar',
-          data:{ labels, datasets:[{ label:'Puntos Totales', data:valoresPuntos, backgroundColor:'rgba(99,102,241,0.7)', borderColor:'rgba(99,102,241,1)', borderWidth:1 }]},
+          data:{
+            labels,
+            datasets:[{
+              label:'Puntos Totales',
+              data:valoresPuntos,
+              backgroundColor:fillsPuntos,
+              borderColor:strokesPuntos,
+              borderWidth:1
+            }]
+          },
           options:{ responsive:true, scales:{y:{beginAtZero:true}} }
         });
       }
 
-      // Crear o actualizar gráfico de bote
       if(chartBote){
         chartBote.data.labels = labels;
         chartBote.data.datasets[0].data = valoresBote;
         chartBote.update();
-      }else{
+      } else {
         chartBote = new Chart(document.getElementById('chartBote'), {
           type:'bar',
-          data:{ labels, datasets:[{ label:'Bote Acumulado (zł)', data:valoresBote, backgroundColor:'rgba(16,185,129,0.7)', borderColor:'rgba(16,185,129,1)', borderWidth:1 }]},
+          data:{
+            labels,
+            datasets:[{
+              label:'Bote Acumulado (zł)',
+              data:valoresBote,
+              backgroundColor:'rgba(16,185,129,0.7)',
+              borderColor:'rgba(16,185,129,1)',
+              borderWidth:1
+            }]
+          },
           options:{ responsive:true, scales:{y:{beginAtZero:true}} }
         });
       }
     }
 
-    // Ordenación de la tabla (mantiene jornada actual)
+    // Ordenación
     function sortTable(n){
       const table = document.getElementById("ligaTable");
       const rows = Array.from(table.tBodies[0].rows);
       const isNumeric = !isNaN(rows[0].cells[n].innerText.trim());
-
       rows.sort((a,b)=>{
         let x=a.cells[n].innerText.trim(), y=b.cells[n].innerText.trim();
         return isNumeric ? Number(y)-Number(x) : x.localeCompare(y);
@@ -212,7 +256,7 @@
     }
     window.sortTable = sortTable;
 
-    // Listener selector
+    // Listener
     const select = document.getElementById("selectJornada");
     select.addEventListener("change", ()=>render(select.value));
 
@@ -221,4 +265,5 @@
   </script>
 </body>
 </html>
+
 
