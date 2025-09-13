@@ -6,7 +6,6 @@
   <title>Porra Wroclaw 2025-2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Plugin para etiquetas de datos -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <style>
     body::before{
@@ -62,7 +61,7 @@
     </div>
   </section>
 
-  <!-- TABLA -->
+  <!-- TABLA CLASIFICACIÓN -->
   <section id="tabla" class="container mx-auto px-6 py-10">
     <h2 class="text-3xl font-bold text-center mb-6">Clasificación</h2>
     <p class="text-sm text-gray-500 mb-4 text-center">
@@ -87,14 +86,28 @@
     </div>
   </section>
 
+  <!-- TABLA DE PARTIDOS POR JORNADA -->
+  <section class="container mx-auto px-6 pb-16">
+    <h2 class="text-3xl font-bold text-center mb-6">Pronósticos por Jornada</h2>
+    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+      <table class="w-full text-left border border-gray-300" id="tablaPartidos">
+        <thead id="theadPartidos" class="bg-indigo-500 text-white"></thead>
+        <tbody id="tbodyPartidos" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-500 mt-2">
+      <strong>Verde</strong> = acierto (el pronóstico coincide con el resultado real de esa casilla).
+    </p>
+  </section>
+
   <footer class="bg-gray-900 text-gray-400 py-6 text-center">
     <p>© 2025 Porra Wroclaw 2025-2026</p>
   </footer>
 
   <script>
-    // =========================
-    // Datos históricos por jornada
-    // =========================
+    /* =====================================================
+       CLASIFICACIÓN – datos históricos por jornada
+       ===================================================== */
     const historico = {
       J1: [
         {nombre:"Fons",pj:2,pt:2,bj:5,bt:5},
@@ -143,14 +156,55 @@
       ]
     };
 
-    // Estado Chart.js
+    /* =====================================================
+       PARTIDOS – estructura por jornada
+       COMPLETA AQUÍ con todos tus datos (ejemplos cargados)
+       ===================================================== */
+    const quinielas = {
+      J1: {
+        partidos: ["RMD-OSA","ELC-BET","CEL-GET","ATB-SEV"],
+        reales:   ["1-0","1-1","2","1"],       // <-- RESULTADOS REALES J1
+        filas: [
+          // nombre, 4 pronósticos (R1..R4), puntos jornada (opcional si ya se muestra en la tabla de arriba)
+          {nombre:"Fons",   r:["3-0","0-2","1","1"], puntos:2},
+          {nombre:"Carlos", r:["3-0","0-2","2","1"], puntos:0},
+          {nombre:"Sergi",  r:["2-0","0-1","1","1"], puntos:2},
+          {nombre:"Wilby",  r:["2-0","0-2","1","2"], puntos:2},
+          // …añade aquí el resto (Pablo, Alex, Gotzon, Eneko, Manu, Jesus, Ivan, Oscar, Txus)
+        ]
+      },
+      J2: {
+        partidos: ["OSA-VLC","RSC-ESP","VLL-GIR","ATB-RAY"],
+        reales:   ["1-0","2-0","1","1"],       // <-- RESULTADOS REALES J2
+        filas: [
+          {nombre:"Fons",   r:["1-0","2-0","1","1"], puntos:4},
+          {nombre:"Carlos", r:["0-1","2-0","1","1"], puntos:4},
+          {nombre:"Sergi",  r:["1-0","0-0","1","1"], puntos:2},
+          // …añade el resto
+        ]
+      },
+      J3: {
+        partidos: ["VLC-GET","CEL-VLL","BET-ATB","GIR-SEV"],
+        reales:   ["3-0","1-1","2","2"],       // <-- RESULTADOS REALES J3
+        filas: [
+          {nombre:"Fons",   r:["1-0","0-2","X","2"], puntos:0},
+          {nombre:"Carlos", r:["1-0","0-1","1","2"], puntos:0},
+          {nombre:"Sergi",  r:["3-0","1-0","2","X"], puntos:0},
+          // …añade el resto
+        ]
+      }
+    };
+    // NOTA: si lo prefieres, ignora "puntos" aquí y deja que solo se muestre
+    // el de la tabla de clasificación (los verde/rojo se calculan siempre).
+
+    // ====== Estado Chart.js
     let chartPuntos, chartBote;
 
     const tbody = document.getElementById("tbodyLiga");
     const boteTotalEl = document.getElementById("boteTotal");
     const subtituloJornada = document.getElementById("subtituloJornada");
 
-    // Helpers de color
+    // Helpers de color para la CLASIFICACIÓN
     function colorPorPosicion(idx) {
       if (idx <= 2) {
         return {bgClass: 'bg-emerald-100', textClass:'text-emerald-900', fill:'rgba(16,185,129,0.75)', stroke:'rgba(16,185,129,1)'};
@@ -168,6 +222,7 @@
     }
 
     function render(jornadaKey){
+      /* ---------- CLASIFICACIÓN ---------- */
       const datos = historico[jornadaKey];
       const totalBote = datos.reduce((s,d)=>s+d.bt,0);
       boteTotalEl.textContent = `${totalBote} zł`;
@@ -177,7 +232,6 @@
       const maxBote = Math.max(...datos.map(d=>d.bt));
       const posPorNombre = Object.fromEntries(rankingPorPuntos.map((d,i)=>[d.nombre,i]));
 
-      // Tabla
       tbody.innerHTML = datos.map(d=>{
         const idx = posPorNombre[d.nombre];
         const col = colorPorPosicion(idx);
@@ -192,7 +246,7 @@
           </tr>`;
       }).join("");
 
-      // Gráficos
+      /* ---------- GRÁFICOS ---------- */
       const labels = rankingPorPuntos.map((d,i)=>`${i+1}. ${d.nombre}`);
       const valoresPuntos = rankingPorPuntos.map(d=>d.pt);
       const valoresBote  = rankingPorPuntos.map(d=>d.bt);
@@ -268,9 +322,56 @@
           plugins:[ChartDataLabels]
         });
       }
+
+      /* ---------- TABLA DE PARTIDOS ---------- */
+      renderTablaPartidos(jornadaKey);
     }
 
-    // Ordenación
+    // TABLA DE PARTIDOS – Render
+    function renderTablaPartidos(jornadaKey){
+      const cont = quinielas[jornadaKey];
+      const thead = document.getElementById('theadPartidos');
+      const tbody = document.getElementById('tbodyPartidos');
+
+      // Encabezado
+      thead.innerHTML = `
+        <tr class="divide-x divide-indigo-400">
+          <th class="py-3 px-4 text-left">Participante</th>
+          <th class="py-3 px-4 text-center">${cont.partidos[0]}</th>
+          <th class="py-3 px-4 text-center">${cont.partidos[1]}</th>
+          <th class="py-3 px-4 text-center">${cont.partidos[2]}</th>
+          <th class="py-3 px-4 text-center">${cont.partidos[3]}</th>
+          <th class="py-3 px-4 text-center">Puntos</th>
+        </tr>
+        <tr class="bg-indigo-600/90 text-xs">
+          <th class="py-1 px-4 text-left font-normal">Resultado real</th>
+          <th class="py-1 px-4 text-center">${cont.reales[0]}</th>
+          <th class="py-1 px-4 text-center">${cont.reales[1]}</th>
+          <th class="py-1 px-4 text-center">${cont.reales[2]}</th>
+          <th class="py-1 px-4 text-center">${cont.reales[3]}</th>
+          <th></th>
+        </tr>`;
+
+      // Cuerpo
+      const okStyle = "bg-emerald-100 text-emerald-900 font-semibold rounded";
+      tbody.innerHTML = cont.filas.map(f=>{
+        const c0 = f.r[0] === cont.reales[0] ? okStyle : "";
+        const c1 = f.r[1] === cont.reales[1] ? okStyle : "";
+        const c2 = f.r[2] === cont.reales[2] ? okStyle : "";
+        const c3 = f.r[3] === cont.reales[3] ? okStyle : "";
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2 px-4">${f.nombre}</td>
+            <td class="py-2 px-4 text-center"><span class="inline-block px-2 py-1 ${c0}">${f.r[0] ?? ""}</span></td>
+            <td class="py-2 px-4 text-center"><span class="inline-block px-2 py-1 ${c1}">${f.r[1] ?? ""}</span></td>
+            <td class="py-2 px-4 text-center"><span class="inline-block px-2 py-1 ${c2}">${f.r[2] ?? ""}</span></td>
+            <td class="py-2 px-4 text-center"><span class="inline-block px-2 py-1 ${c3}">${f.r[3] ?? ""}</span></td>
+            <td class="py-2 px-4 text-center font-semibold">${f.puntos ?? ""}</td>
+          </tr>`;
+      }).join("");
+    }
+
+    // Ordenación (tabla clasificación)
     function sortTable(n){
       const table = document.getElementById("ligaTable");
       const rows = Array.from(table.tBodies[0].rows);
@@ -283,11 +384,9 @@
     }
     window.sortTable = sortTable;
 
-    // Listener
+    // Selector y render inicial
     const select = document.getElementById("selectJornada");
     select.addEventListener("change", ()=>render(select.value));
-
-    // Render inicial
     render(select.value);
   </script>
 </body>
