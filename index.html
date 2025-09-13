@@ -1,116 +1,235 @@
-<!-- SELECTOR DE JORNADA -->
-<section class="container mx-auto px-6 py-10 text-center">
-  <label for="jornadaSelect" class="block text-lg font-semibold mb-2">Selecciona Jornada:</label>
-  <select id="jornadaSelect" class="px-4 py-2 border rounded-lg shadow-md">
-    <option value="J1">Jornada 1</option>
-    <option value="J2">Jornada 2</option>
-    <option value="J3">Jornada 3</option>
-  </select>
-</section>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Porra Wroclaw 2025-2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Fondo general: muy sutil para no interferir con contenidos */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background: url('https://www.freepik.com/free-vector/sports-games-abstract-concept-illustration_11667658.htm') center/cover no-repeat fixed;
+      opacity:.06;
+      z-index:-1;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
 
-<script>
-  // Base de datos extraída del Excel
-  const baseDatos = {
-    "J1": [
-      { jugador:"Fons", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Carlos", puntosJornada:0, puntosTotales:0, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:10 },
-      { jugador:"Sergi", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Wilby", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Pablo", puntosJornada:0, puntosTotales:0, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:10 },
-      { jugador:"Alex", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Gotzon", puntosJornada:5, puntosTotales:5, resultadosExactos:1, jornadasCero:0, boteJornada:0, boteTotal:0 },
-      { jugador:"Eneko", puntosJornada:3, puntosTotales:3, resultadosExactos:1, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Manu", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Jesus", puntosJornada:5, puntosTotales:5, resultadosExactos:1, jornadasCero:0, boteJornada:0, boteTotal:0 },
-      { jugador:"Ivan", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Oscar", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Txus", puntosJornada:5, puntosTotales:5, resultadosExactos:1, jornadasCero:0, boteJornada:0, boteTotal:0 }
-    ],
-    "J2": [
-      { jugador:"Fons", puntosJornada:4, puntosTotales:6, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Carlos", puntosJornada:4, puntosTotales:4, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:15 },
-      { jugador:"Sergi", puntosJornada:2, puntosTotales:4, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Wilby", puntosJornada:5, puntosTotales:7, resultadosExactos:1, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Pablo", puntosJornada:2, puntosTotales:2, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:15 },
-      { jugador:"Alex", puntosJornada:4, puntosTotales:6, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Gotzon", puntosJornada:2, puntosTotales:7, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 },
-      { jugador:"Eneko", puntosJornada:2, puntosTotales:5, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Manu", puntosJornada:7, puntosTotales:9, resultadosExactos:1, jornadasCero:0, boteJornada:0, boteTotal:5 },
-      { jugador:"Jesus", puntosJornada:0, puntosTotales:7, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:10 },
-      { jugador:"Ivan", puntosJornada:4, puntosTotales:6, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Oscar", puntosJornada:4, puntosTotales:6, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Txus", puntosJornada:7, puntosTotales:12, resultadosExactos:1, jornadasCero:0, boteJornada:0, boteTotal:0 }
-    ],
-    "J3": [
-      { jugador:"Fons", puntosJornada:0, puntosTotales:6, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
-      { jugador:"Carlos", puntosJornada:0, puntosTotales:4, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:25 },
-      { jugador:"Sergi", puntosJornada:0, puntosTotales:6, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
-      { jugador:"Wilby", puntosJornada:0, puntosTotales:7, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
-      { jugador:"Pablo", puntosJornada:0, puntosTotales:2, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:25 },
-      { jugador:"Alex", puntosJornada:0, puntosTotales:8, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
-      { jugador:"Gotzon", puntosJornada:3, puntosTotales:10, resultadosExactos:1, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Eneko", puntosJornada:3, puntosTotales:8, resultadosExactos:1, jornadasCero:0, boteJornada:5, boteTotal:15 },
-      { jugador:"Manu", puntosJornada:2, puntosTotales:11, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:10 },
-      { jugador:"Jesus", puntosJornada:0, puntosTotales:7, resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
-      { jugador:"Ivan", puntosJornada:2, puntosTotales:8, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:15 },
-      { jugador:"Oscar", puntosJornada:4, puntosTotales:10, resultadosExactos:0, jornadasCero:0, boteJornada:0, boteTotal:10 },
-      { jugador:"Txus", puntosJornada:2, puntosTotales:14, resultadosExactos:0, jornadasCero:0, boteJornada:5, boteTotal:5 }
-    ]
-  };
+  <!-- HERO -->
+  <section class="relative text-white">
+    <div class="absolute inset-0">
+      <!-- URL directo decodificado desde tu enlace de Freepik/Pikaso -->
+      <img
+        src="https://img.freepik.com/free-photo/futuristic-soccer-field-illustration_23-2151539688.jpg?t=st%3D1757770999~exp%3D1757774599~hmac%3D98bfdf26422232927a53cc3e50f1d99f348107ed208af2d8c5ec16adabacbd5c&w=2000&h=2000"
+        alt="Futuristic soccer field"
+        class="w-full h-full object-cover opacity-70"/>
+      <div class="absolute inset-0 bg-black/60"></div>
+    </div>
 
-  let chartPuntos, chartBote;
+    <div class="relative container mx-auto px-6 py-24 md:py-32 text-center">
+      <h1 class="text-4xl md:text-6xl font-extrabold text-indigo-300">
+        Porra Wroclaw 2025-2026
+      </h1>
+    </div>
+  </section>
 
-  function cargarJornada(jornada) {
-    let data = baseDatos[jornada];
+  <!-- SELECTOR DE JORNADA + BOTE TOTAL -->
+  <section class="container mx-auto px-6 pt-8 pb-4">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="w-full md:w-auto text-center md:text-left">
+        <label for="jornadaSelect" class="block text-base font-semibold mb-2">Selecciona jornada</label>
+        <select id="jornadaSelect" class="w-full md:w-56 px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white">
+          <!-- Se rellena por JS -->
+        </select>
+      </div>
+      <div class="text-center">
+        <div class="inline-block bg-green-100 border border-green-300 rounded-lg shadow p-4">
+          <div class="text-sm font-semibold text-green-800">💰 Bote total acumulado (jornada seleccionada)</div>
+          <div id="boteTotal" class="text-3xl font-extrabold text-green-700 mt-1">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    // Calcular bote total
-    let boteTotal = data.reduce((sum, item) => sum + item.boteTotal, 0);
-    document.getElementById("boteTotal").innerText = boteTotal + " zł";
+  <!-- GRÁFICOS -->
+  <section id="graficos" class="container mx-auto px-6 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <h3 class="text-lg font-semibold mb-4 text-center">Ranking por Puntos Totales</h3>
+        <canvas id="chartPuntos" height="220"></canvas>
+      </div>
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <h3 class="text-lg font-semibold mb-4 text-center">Bote Acumulado (mismo orden del ranking)</h3>
+        <canvas id="chartBote" height="220"></canvas>
+      </div>
+    </div>
+  </section>
 
-    // Ranking
-    let ranking = [...data].sort((a, b) => b.puntosTotales - a.puntosTotales);
-    let labelsRanking = ranking.map((d, i) => `${i+1}. ${d.jugador}`);
-    let valoresPuntos = ranking.map(d => d.puntosTotales);
-    let valoresBote = ranking.map(d => d.boteTotal);
+  <!-- TABLA DETALLADA -->
+  <section id="tabla" class="container mx-auto px-6 py-10">
+    <h2 class="text-2xl font-bold text-center mb-6">Clasificación (detalle jornada)</h2>
+    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+      <table id="ligaTable" class="w-full text-left border border-gray-300">
+        <thead class="bg-indigo-500 text-white text-sm md:text-base">
+          <tr class="divide-x divide-indigo-400">
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(0)">Jugador</th>
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(1)">Puntos Jornada</th>
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(2)">Puntos Totales</th>
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(3)">Resultados Exactos</th>
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(4)">Jornadas con 0</th>
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(5)">PLN Jornada</th>
+            <th class="py-3 px-4 cursor-pointer" onclick="sortTable(6)">PLN Totales</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 text-sm md:text-base">
+          <!-- Se rellena por JS -->
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    // Actualizar gráficos
-    if (chartPuntos) chartPuntos.destroy();
-    if (chartBote) chartBote.destroy();
+  <footer class="bg-gray-900 text-gray-300 py-6 text-center">
+    <p>© 2025 Porra Wroclaw 2025-2026</p>
+  </footer>
 
-    chartPuntos = new Chart(document.getElementById('chartPuntos'), {
-      type: 'bar',
-      data: { labels: labelsRanking, datasets: [{ label: 'Puntos Totales', data: valoresPuntos, backgroundColor: 'rgba(99,102,241,0.7)', borderColor: 'rgba(99,102,241,1)', borderWidth: 1 }] },
-      options: { responsive: true, scales: { y: { beginAtZero: true } } }
-    });
+  <!-- DATA + LOGIC -->
+  <script>
+    // ======== DATA (de tu Excel) ========
+    const baseDatos = {
+      "J1":[
+        { jugador:"Fons",   puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Carlos", puntosJornada:0, puntosTotales:0,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:10 },
+        { jugador:"Sergi",  puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Wilby",  puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Pablo",  puntosJornada:0, puntosTotales:0,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:10 },
+        { jugador:"Alex",   puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Gotzon", puntosJornada:5, puntosTotales:5,  resultadosExactos:1, jornadasCero:0, boteJornada:0,  boteTotal:0 },
+        { jugador:"Eneko",  puntosJornada:3, puntosTotales:3,  resultadosExactos:1, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Manu",   puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Jesus",  puntosJornada:5, puntosTotales:5,  resultadosExactos:1, jornadasCero:0, boteJornada:0,  boteTotal:0 },
+        { jugador:"Ivan",   puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Oscar",  puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Txus",   puntosJornada:5, puntosTotales:5,  resultadosExactos:1, jornadasCero:0, boteJornada:0,  boteTotal:0 }
+      ],
+      "J2":[
+        { jugador:"Fons",   puntosJornada:4, puntosTotales:6,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Carlos", puntosJornada:4, puntosTotales:4,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:15 },
+        { jugador:"Sergi",  puntosJornada:2, puntosTotales:4,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Wilby",  puntosJornada:5, puntosTotales:7,  resultadosExactos:1, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Pablo",  puntosJornada:2, puntosTotales:2,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:15 },
+        { jugador:"Alex",   puntosJornada:4, puntosTotales:6,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Gotzon", puntosJornada:2, puntosTotales:7,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 },
+        { jugador:"Eneko",  puntosJornada:2, puntosTotales:5,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Manu",   puntosJornada:7, puntosTotales:9,  resultadosExactos:1, jornadasCero:0, boteJornada:0,  boteTotal:5 },
+        { jugador:"Jesus",  puntosJornada:0, puntosTotales:7,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:10 },
+        { jugador:"Ivan",   puntosJornada:4, puntosTotales:6,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Oscar",  puntosJornada:4, puntosTotales:6,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Txus",   puntosJornada:7, puntosTotales:12, resultadosExactos:1, jornadasCero:0, boteJornada:0,  boteTotal:0 }
+      ],
+      "J3":[
+        { jugador:"Fons",   puntosJornada:0, puntosTotales:6,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
+        { jugador:"Carlos", puntosJornada:0, puntosTotales:4,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:25 },
+        { jugador:"Sergi",  puntosJornada:0, puntosTotales:6,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
+        { jugador:"Wilby",  puntosJornada:0, puntosTotales:7,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
+        { jugador:"Pablo",  puntosJornada:0, puntosTotales:2,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:25 },
+        { jugador:"Alex",   puntosJornada:0, puntosTotales:8,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
+        { jugador:"Gotzon", puntosJornada:3, puntosTotales:10, resultadosExactos:1, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Eneko",  puntosJornada:3, puntosTotales:8,  resultadosExactos:1, jornadasCero:0, boteJornada:5,  boteTotal:15 },
+        { jugador:"Manu",   puntosJornada:2, puntosTotales:11, resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:10 },
+        { jugador:"Jesus",  puntosJornada:0, puntosTotales:7,  resultadosExactos:0, jornadasCero:1, boteJornada:10, boteTotal:20 },
+        { jugador:"Ivan",   puntosJornada:2, puntosTotales:8,  resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:15 },
+        { jugador:"Oscar",  puntosJornada:4, puntosTotales:10, resultadosExactos:0, jornadasCero:0, boteJornada:0,  boteTotal:10 },
+        { jugador:"Txus",   puntosJornada:2, puntosTotales:14, resultadosExactos:0, jornadasCero:0, boteJornada:5,  boteTotal:5 }
+      ]
+    };
 
-    chartBote = new Chart(document.getElementById('chartBote'), {
-      type: 'bar',
-      data: { labels: labelsRanking, datasets: [{ label: 'Bote Acumulado (zł)', data: valoresBote, backgroundColor: 'rgba(16,185,129,0.7)', borderColor: 'rgba(16,185,129,1)', borderWidth: 1 }] },
-      options: { responsive: true, scales: { y: { beginAtZero: true } } }
-    });
+    // ======== UI state ========
+    let chartPuntos = null;
+    let chartBote   = null;
 
-    // Actualizar tabla
-    let tbody = document.querySelector("#ligaTable tbody");
-    tbody.innerHTML = "";
-    data.forEach(jugador => {
-      tbody.innerHTML += `
-        <tr>
-          <td>${jugador.jugador}</td>
-          <td>${jugador.puntosJornada}</td>
-          <td>${jugador.puntosTotales}</td>
-          <td>${jugador.resultadosExactos}</td>
-          <td>${jugador.jornadasCero}</td>
-          <td>${jugador.boteJornada}</td>
-          <td>${jugador.boteTotal}</td>
-        </tr>`;
-    });
-  }
+    // Completar el selector de jornadas dinámicamente
+    (function initSelect(){
+      const sel = document.getElementById('jornadaSelect');
+      const jornadas = Object.keys(baseDatos); // p.ej. ["J1","J2","J3", ...]
+      jornadas.forEach(j => {
+        const o = document.createElement('option');
+        o.value = j; o.textContent = j.replace('J','Jornada ');
+        sel.appendChild(o);
+      });
+      sel.value = jornadas[0];
+    })();
 
-  // Detectar cambio
-  document.getElementById("jornadaSelect").addEventListener("change", (e) => {
-    cargarJornada(e.target.value);
-  });
+    // Cargar una jornada
+    function cargarJornada(jornada){
+      const data = baseDatos[jornada];
 
-  // Inicializar con Jornada 1
-  cargarJornada("J1");
-</script>
+      // Bote total de la jornada (suma del acumulado reportado en esa jornada)
+      const boteTotal = data.reduce((acc, x) => acc + Number(x.boteTotal||0), 0);
+      document.getElementById('boteTotal').textContent = boteTotal + ' PLN';
+
+      // Ranking por puntos totales (desc) -> mismo orden para ambos gráficos
+      const ranking = [...data].sort((a,b) => b.puntosTotales - a.puntosTotales);
+      const labels  = ranking.map((d,i) => `${i+1}. ${d.jugador}`);
+      const arrPts  = ranking.map(d => d.puntosTotales);
+      const arrBote = ranking.map(d => d.boteTotal);
+
+      // Gráfico puntos (recrear para evitar artefactos)
+      if(chartPuntos) chartPuntos.destroy();
+      chartPuntos = new Chart(document.getElementById('chartPuntos'), {
+        type: 'bar',
+        data: { labels, datasets: [{ label:'Puntos Totales', data: arrPts, borderWidth:1, backgroundColor:'rgba(99,102,241,.7)', borderColor:'rgba(99,102,241,1)' }] },
+        options: { responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }}}}
+      });
+
+      // Gráfico bote (mismo orden que puntos)
+      if(chartBote) chartBote.destroy();
+      chartBote = new Chart(document.getElementById('chartBote'), {
+        type: 'bar',
+        data: { labels, datasets: [{ label:'Bote Acumulado (PLN)', data: arrBote, borderWidth:1, backgroundColor:'rgba(16,185,129,.7)', borderColor:'rgba(16,185,129,1)' }] },
+        options: { responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }}}}
+      });
+
+      // Tabla
+      const tbody = document.querySelector('#ligaTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = 'divide-x divide-gray-200';
+        tr.innerHTML = `
+          <td class="py-3 px-4">${r.jugador}</td>
+          <td class="py-3 px-4">${r.puntosJornada}</td>
+          <td class="py-3 px-4">${r.puntosTotales}</td>
+          <td class="py-3 px-4">${r.resultadosExactos}</td>
+          <td class="py-3 px-4">${r.jornadasCero}</td>
+          <td class="py-3 px-4">${r.boteJornada}</td>
+          <td class="py-3 px-4">${r.boteTotal}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Ordenar tabla (desc por numéricos, A→Z por texto)
+    function sortTable(col){
+      const tbody = document.querySelector('#ligaTable tbody');
+      const rows  = Array.from(tbody.querySelectorAll('tr'));
+      const isNumeric = !isNaN(rows[0].children[col].textContent.trim());
+      rows.sort((a,b)=>{
+        const x = a.children[col].textContent.trim();
+        const y = b.children[col].textContent.trim();
+        return isNumeric ? (Number(y)-Number(x)) : x.localeCompare(y);
+      });
+      rows.forEach(r=>tbody.appendChild(r));
+    }
+    window.sortTable = sortTable;
+
+    // Eventos
+    document.getElementById('jornadaSelect').addEventListener('change', e => cargarJornada(e.target.value));
+
+    // Init
+    cargarJornada(document.getElementById('jornadaSelect').value);
+  </script>
+</body>
+</html>
