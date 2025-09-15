@@ -91,7 +91,7 @@
     </div>
   </section>
 
-  <!-- NUEVA SECCIÓN: EVOLUCIÓN DE PUNTOS POR JORNADA (POR JUGADOR) -->
+  <!-- EVOLUCIÓN DE PUNTOS POR JORNADA (POR JUGADOR) -->
   <section class="container mx-auto px-6 pb-12">
     <div class="bg-white shadow-lg rounded-lg p-6">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -168,7 +168,7 @@
   </footer>
 
   <script>
-    /* ====== DATOS EMBEBIDOS: CLASIFICACIÓN ====== */
+    /* ====== DATOS: CLASIFICACIÓN ====== */
     const historico = {
       "J1":[
         {"nombre":"Fons","pj":2,"pt":2,"bj":5,"bt":5},{"nombre":"Carlos","pj":0,"pt":0,"bj":10,"bt":10},
@@ -208,7 +208,7 @@
       ]
     };
 
-    /* ====== DATOS EMBEBIDOS: PARTIDOS/PRONÓSTICOS ====== */
+    /* ====== DATOS: PARTIDOS/PRONÓSTICOS ====== */
     const quinielas = {
       "J1":{ partidos:["RMD-OSA","ELC-BET","CEL-GET","ATB-SEV"], reales:["1-0","1-1","2","1"], filas:[
         {nombre:"Fons",r:["3-0","0-2","1","1"]},{nombre:"Carlos",r:["3-0","0-2","X","X"]},{nombre:"Sergi",r:["2-0","0-1","1","1"]},
@@ -245,7 +245,7 @@
     const tbody = document.getElementById("tbodyLiga");
     const boteTotalEl = document.getElementById("boteTotal");
     const subtituloJornada = document.getElementById("subtituloJornada");
-    let currentJornada = "J4";   // se actualiza con los selectores
+    let currentJornada = "J4";
     let pronosticosFilter = localStorage.getItem("porra_pron_filter") || "all"; // all|max|zero
 
     const normName = s => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
@@ -281,6 +281,25 @@
       return p;
     }
 
+    // Colores degradados para el gráfico de bote (top3 verdes, resto hacia rojo)
+    function coloresBote(n){
+      const fills = [], strokes = [];
+      for(let i=0;i<n;i++){
+        if(i<3){
+          const light = 50 - i*6; // verdes ligeramente distintos
+          fills.push(`hsla(152,60%,${light}%,0.85)`);
+          strokes.push(`hsl(152,65%,${Math.max(30,light-10)}%)`);
+        } else {
+          const t = (n<=4) ? 1 : (i-3)/(n-4); // 0..1 desde la 4ª hasta la última
+          const light = 85 - 45*t;           // de rojo claro a rojo intenso
+          const sat   = 70 + 20*t;
+          fills.push(`hsla(0,${sat}%,${light}%,0.9)`);
+          strokes.push(`hsl(0,${Math.min(95,sat+5)}%,${Math.max(25,light-12)}%)`);
+        }
+      }
+      return {fills, strokes};
+    }
+
     function render(jornadaKey){
       currentJornada = jornadaKey;
       const datos = historico[jornadaKey] || [];
@@ -288,6 +307,7 @@
       boteTotalEl.textContent = `${totalBote} zł`;
       subtituloJornada.textContent = `Acumulado hasta ${jornadaKey}`;
 
+      // ===== Clasificación (tabla) con código cromático por ranking de puntos totales
       const rankingPorPuntos = [...datos].sort((a,b)=>b.pt-a.pt);
       const maxBote = Math.max(0, ...datos.map(d=>d.bt));
       const posPorNombre = Object.fromEntries(rankingPorPuntos.map((d,i)=>[d.nombre,i]));
@@ -306,14 +326,14 @@
           </tr>`;
       }).join("");
 
-      const labels = rankingPorPuntos.map((d,i)=>`${i+1}. ${d.nombre}`);
+      // ===== Ranking por puntos (gráfico)
+      const labelsP = rankingPorPuntos.map((d,i)=>`${i+1}. ${d.nombre}`);
       const valoresPuntos = rankingPorPuntos.map(d=>d.pt);
-      const valoresBote  = rankingPorPuntos.map(d=>d.bt);
       const fillsPuntos  = rankingPorPuntos.map((_,i)=>colorPorPosicion(i).fill);
       const strokesPuntos= rankingPorPuntos.map((_,i)=>colorPorPosicion(i).stroke);
 
       if(chartPuntos){
-        chartPuntos.data.labels = labels;
+        chartPuntos.data.labels = labelsP;
         chartPuntos.data.datasets[0].data = valoresPuntos;
         chartPuntos.data.datasets[0].backgroundColor = fillsPuntos;
         chartPuntos.data.datasets[0].borderColor = strokesPuntos;
@@ -321,20 +341,28 @@
       } else {
         chartPuntos = new Chart(document.getElementById('chartPuntos'), {
           type:'bar',
-          data:{ labels, datasets:[{ label:'Puntos Totales', data:valoresPuntos, backgroundColor:fillsPuntos, borderColor:strokesPuntos, borderWidth:1 }]},
+          data:{ labels: labelsP, datasets:[{ label:'Puntos Totales', data:valoresPuntos, backgroundColor:fillsPuntos, borderColor:strokesPuntos, borderWidth:1 }]},
           options:{ responsive:true, scales:{y:{beginAtZero:true}}, plugins:{ datalabels:{ anchor:'center', align:'center', color:'#fff', font:{weight:'bold'}, formatter:(v)=> v } } },
           plugins:[ChartDataLabels]
         });
       }
 
+      // ===== Ranking por bote (gráfico) — ORDEN ASCENDENTE (menos bote = mejor)
+      const rankingPorBote = [...datos].sort((a,b)=>a.bt - b.bt); // << cambio a ascendente
+      const labelsB = rankingPorBote.map((d,i)=>`${i+1}. ${d.nombre}`);
+      const valoresBote  = rankingPorBote.map(d=>d.bt);
+      const {fills: fillsBote, strokes: strokesBote} = coloresBote(valoresBote.length);
+
       if(chartBote){
-        chartBote.data.labels = labels;
+        chartBote.data.labels = labelsB;
         chartBote.data.datasets[0].data = valoresBote;
+        chartBote.data.datasets[0].backgroundColor = fillsBote;
+        chartBote.data.datasets[0].borderColor = strokesBote;
         chartBote.update();
       } else {
         chartBote = new Chart(document.getElementById('chartBote'), {
           type:'bar',
-          data:{ labels, datasets:[{ label:'Bote Acumulado (zł)', data:valoresBote, backgroundColor:'rgba(16,185,129,0.7)', borderColor:'rgba(16,185,129,1)', borderWidth:1 }]},
+          data:{ labels: labelsB, datasets:[{ label:'Bote Acumulado (zł)', data:valoresBote, backgroundColor:fillsBote, borderColor:strokesBote, borderWidth:1 }]},
           options:{ responsive:true, scales:{y:{beginAtZero:true}}, plugins:{ datalabels:{ anchor:'center', align:'center', color:'#fff', font:{weight:'bold'}, formatter:(v)=> v } } },
           plugins:[ChartDataLabels]
         });
@@ -383,13 +411,12 @@
       const puntosArr = filasOrdenadas.map(f => puntosDeJornada(jornadaKey, f.nombre));
       const maxJ = Math.max(0, ...puntosArr);
 
-      // aplicar filtro
       const filasParaMostrar = filasOrdenadas
         .map((f, idx) => ({ f, puntos: puntosArr[idx] }))
         .filter(obj => {
           if (pronosticosFilter === "max")  return obj.puntos === maxJ && maxJ > 0;
           if (pronosticosFilter === "zero") return obj.puntos === 0;
-          return true; // all
+          return true;
         });
 
       tbodyP.innerHTML = filasParaMostrar.map(({f, puntos})=>{
@@ -413,7 +440,6 @@
           </tr>`;
       }).join("");
 
-      // Listener del filtro (ciclo All→Max→Zero→All)
       document.getElementById('puntosHeader').addEventListener('click', ()=>{
         pronosticosFilter = (pronosticosFilter === "all") ? "max" : (pronosticosFilter === "max" ? "zero" : "all");
         localStorage.setItem("porra_pron_filter", pronosticosFilter);
@@ -439,7 +465,6 @@
     const tbodyJugador  = document.getElementById('tbodyJugador');
     const jugadorStats  = document.getElementById('jugadorStats');
     const jornadasOrden = Object.keys(historico).sort((a,b)=>Number(a.slice(1))-Number(b.slice(1)));
-
     const jugadores = Array.from(new Set(jornadasOrden.flatMap(j => historico[j].map(x => x.nombre)))).sort((a,b)=>a.localeCompare(b));
     selectJugador.innerHTML = jugadores.map(n => `<option value="${n}">${n}</option>`).join('');
     selectJugador.value = jugadores[0];
@@ -454,11 +479,9 @@
       const sum = puntos.reduce((a,b)=>a+b,0);
       const avg = puntos.length ? sum / puntos.length : 0;
       const max = Math.max(0, ...puntos);
-      const idxsMax = puntos
-        .map((v,i)=> v===max ? jornadasOrden[i] : null)
-        .filter(Boolean);
+      const idxsMax = puntos.map((v,i)=> v===max ? jornadasOrden[i] : null).filter(Boolean);
 
-      // badges de stats
+      // badges
       jugadorStats.innerHTML = `
         <span class="inline-block text-sm bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-medium">
           Media: ${avg.toFixed(2)}
@@ -476,9 +499,14 @@
         </tr>
       `).join('');
 
-      // colores: por defecto morado, máximos en verde
-      const barColors = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,0.85)' : 'rgba(99,102,241,0.85)');
-      const barBorders= puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,1)'   : 'rgba(79,70,229,1)');
+      // colores (máximos en verde)
+      const barColors  = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,0.85)' : 'rgba(99,102,241,0.85)');
+      const barBorders = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,1)'   : 'rgba(79,70,229,1)');
+
+      // margen superior dinámico para ver bien las etiquetas
+      const maxVal = Math.max(0, ...puntos);
+      const pad    = Math.max(2, Math.ceil(maxVal * 0.20)); // +20% o mínimo +2
+      const yMax   = maxVal + pad;
 
       const ctx = document.getElementById('chartJugador').getContext('2d');
       const dataCfg = {
@@ -490,13 +518,11 @@
       };
       const optCfg = {
         responsive: true,
-        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+        layout: { padding: { top: 16 } },
+        scales: { y: { beginAtZero: true, suggestedMax: yMax, ticks: { precision: 0, stepSize: 1 } } },
         plugins: {
           legend: { display: false },
-          datalabels: {
-            anchor: 'end', align: 'end', color: '#111827',
-            font: { weight: 'bold' }, formatter: v => v
-          }
+          datalabels: { anchor: 'end', align: 'end', clamp: true, color: '#111827', font: { weight: 'bold' }, formatter: v => v }
         }
       };
 
