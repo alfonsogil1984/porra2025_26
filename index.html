@@ -36,7 +36,8 @@
             <option value="J1">J1</option>
             <option value="J2">J2</option>
             <option value="J3">J3</option>
-            <option value="J4" selected>J4</option>
+            <option value="J4">J4</option>
+            <option value="J5" selected>J5</option>
           </select>
         </div>
         <!-- Switch Anclar selector -->
@@ -61,7 +62,8 @@
         <option value="J1">J1</option>
         <option value="J2">J2</option>
         <option value="J3">J3</option>
-        <option value="J4" selected>J4</option>
+        <option value="J4">J4</option>
+        <option value="J5" selected>J5</option>
       </select>
     </div>
   </div>
@@ -96,7 +98,7 @@
     <div class="bg-white shadow-lg rounded-lg p-6">
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h3 class="text-xl font-semibold">
-          Puntos por jornada <span class="italic text-gray-500">(No incluye puntos por bonus)</span>
+          Puntos por jornada <span class="italic text-gray-500">(incl. puntos por bonus)</span>
         </h3>
         <div class="flex items-center gap-2">
           <label for="selectJugador" class="text-gray-700">Jugador:</label>
@@ -205,6 +207,15 @@
         {"nombre":"Manu","pj":2,"pt":13,"bj":5,"bt":15},{"nombre":"Jesus","pj":4,"pt":11,"bj":5,"bt":25},
         {"nombre":"Ivan","pj":2,"pt":10,"bj":5,"bt":20},{"nombre":"Oscar","pj":5,"pt":19,"bj":5,"bt":11},
         {"nombre":"Txus","pj":4,"pt":18,"bj":5,"bt":10}
+      ],
+      "J5":[
+        {"nombre":"Fons","pj":2,"pt":8,"bj":5,"bt":35},{"nombre":"Carlos","pj":2,"pt":13,"bj":5,"bt":30},
+        {"nombre":"Sergi","pj":5,"pt":17,"bj":5,"bt":26},{"nombre":"Wilby","pj":2,"pt":13,"bj":5,"bt":31},
+        {"nombre":"Pablo","pj":0,"pt":11,"bj":10,"bt":36},{"nombre":"Alex","pj":3,"pt":15,"bj":5,"bt":30},
+        {"nombre":"Gotzon","pj":2,"pt":16,"bj":5,"bt":20},{"nombre":"Eneko","pj":2,"pt":14,"bj":5,"bt":25},
+        {"nombre":"Manu","pj":4,"pt":17,"bj":5,"bt":20},{"nombre":"Jesus","pj":2,"pt":13,"bj":5,"bt":30},
+        {"nombre":"Ivan","pj":7,"pt":19,"bj":0,"bt":20},{"nombre":"Oscar","pj":0,"pt":19,"bj":10,"bt":21},
+        {"nombre":"Txus","pj":0,"pt":18,"bj":10,"bt":20}
       ]
     };
 
@@ -237,6 +248,21 @@
         {nombre:"Gotzon",r:["2-2","4-0","1","1"]},{nombre:"Eneko",r:["0-1","2-1","1","1"]},{nombre:"Manu",r:["0-2","4-0","1","X"]},
         {nombre:"Jesus",r:["0-2","3-1","1","1"]},{nombre:"Ivan",r:["1-3","2-0","X","1"]},{nombre:"Oscar",r:["1-2","3-0","X","1"]},
         {nombre:"Txus",r:["0-2","3-1","1","1"]}
+      ]},
+      "J5":{ partidos:["VLC-ATB","ALA-SEV","GIR-LEV","KAT-KRA"], reales:["2-0","1-2","2","2"], filas:[
+        {nombre:"Fons",  r:["1-1","0-1","X","2"]},
+        {nombre:"Carlos",r:["1-2","1-0","1","2"]},
+        {nombre:"Sergi", r:["0-1","1-2","1","2"]},
+        {nombre:"Wilby", r:["1-3","2-2","X","2"]},
+        {nombre:"Pablo", r:["1-0","1-0","X","1"]},
+        {nombre:"Alex",  r:["1-1","1-2","1","1"]},
+        {nombre:"Gotzon",r:["0-2","1-1","1","2"]},
+        {nombre:"Eneko", r:["0-1","1-1","1","2"]},
+        {nombre:"Manu",  r:["2-1","2-1","2","2"]},
+        {nombre:"Jesus", r:["1-2","2-1","2","X"]},
+        {nombre:"Ivan",  r:["1-1","1-2","2","2"]},
+        {nombre:"Oscar", r:["1-2","1-1","X","X"]},
+        {nombre:"Txus",  r:["1-1","1-1","1","1"]}
       ]}
     };
 
@@ -245,7 +271,7 @@
     const tbody = document.getElementById("tbodyLiga");
     const boteTotalEl = document.getElementById("boteTotal");
     const subtituloJornada = document.getElementById("subtituloJornada");
-    let currentJornada = "J4";
+    let currentJornada = "J5";
     let pronosticosFilter = localStorage.getItem("porra_pron_filter") || "all"; // all|max|zero
 
     const normName = s => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
@@ -348,7 +374,7 @@
       }
 
       // ===== Ranking por bote (gráfico) — ORDEN ASCENDENTE (menos bote = mejor)
-      const rankingPorBote = [...datos].sort((a,b)=>a.bt - b.bt); // << cambio a ascendente
+      const rankingPorBote = [...datos].sort((a,b)=>a.bt - b.bt);
       const labelsB = rankingPorBote.map((d,i)=>`${i+1}. ${d.nombre}`);
       const valoresBote  = rankingPorBote.map(d=>d.bt);
       const {fills: fillsBote, strokes: strokesBote} = coloresBote(valoresBote.length);
@@ -569,3 +595,4 @@
   </script>
 </body>
 </html>
+
