@@ -37,7 +37,9 @@
             <option value="J2">J2</option>
             <option value="J3">J3</option>
             <option value="J4">J4</option>
-            <option value="J5" selected>J5</option>
+            <option value="J5">J5</option>
+            <option value="J6">J6</option>
+            <option value="J7" selected>J7</option>
           </select>
         </div>
         <!-- Switch Anclar selector -->
@@ -63,7 +65,9 @@
         <option value="J2">J2</option>
         <option value="J3">J3</option>
         <option value="J4">J4</option>
-        <option value="J5" selected>J5</option>
+        <option value="J5">J5</option>
+        <option value="J6">J6</option>
+        <option value="J7" selected>J7</option>
       </select>
     </div>
   </div>
@@ -216,6 +220,24 @@
         {"nombre":"Manu","pj":4,"pt":17,"bj":5,"bt":20},{"nombre":"Jesus","pj":2,"pt":13,"bj":5,"bt":30},
         {"nombre":"Ivan","pj":7,"pt":19,"bj":0,"bt":20},{"nombre":"Oscar","pj":0,"pt":19,"bj":10,"bt":21},
         {"nombre":"Txus","pj":0,"pt":18,"bj":10,"bt":20}
+      ],
+      "J6":[
+        {"nombre":"Fons","pj":4,"pt":12,"bj":5,"bt":40},{"nombre":"Carlos","pj":2,"pt":15,"bj":5,"bt":35},
+        {"nombre":"Sergi","pj":5,"pt":22,"bj":5,"bt":31},{"nombre":"Wilby","pj":7,"pt":20,"bj":0,"bt":31},
+        {"nombre":"Pablo","pj":0,"pt":11,"bj":10,"bt":46},{"nombre":"Alex","pj":4,"pt":19,"bj":5,"bt":35},
+        {"nombre":"Gotzon","pj":2,"pt":18,"bj":5,"bt":25},{"nombre":"Eneko","pj":2,"pt":16,"bj":5,"bt":30},
+        {"nombre":"Manu","pj":5,"pt":22,"bj":5,"bt":25},{"nombre":"Jesus","pj":7,"pt":20,"bj":0,"bt":30},
+        {"nombre":"Ivan","pj":5,"pt":24,"bj":5,"bt":25},{"nombre":"Oscar","pj":2,"pt":21,"bj":5,"bt":26},
+        {"nombre":"Txus","pj":4,"pt":22,"bj":5,"bt":25}
+      ],
+      "J7":[
+        {"nombre":"Fons","pj":2,"pt":14,"bj":5,"bt":45},{"nombre":"Carlos","pj":3,"pt":20,"bj":0,"bt":35},
+        {"nombre":"Sergi","pj":0,"pt":24,"bj":10,"bt":41},{"nombre":"Wilby","pj":0,"pt":22,"bj":10,"bt":41},
+        {"nombre":"Pablo","pj":0,"pt":13,"bj":10,"bt":56},{"nombre":"Alex","pj":2,"pt":21,"bj":5,"bt":40},
+        {"nombre":"Gotzon","pj":0,"pt":20,"bj":10,"bt":35},{"nombre":"Eneko","pj":0,"pt":16,"bj":10,"bt":40},
+        {"nombre":"Manu","pj":0,"pt":24,"bj":10,"bt":35},{"nombre":"Jesus","pj":0,"pt":22,"bj":10,"bt":40},
+        {"nombre":"Ivan","pj":3,"pt":29,"bj":0,"bt":25},{"nombre":"Oscar","pj":3,"pt":26,"bj":0,"bt":26},
+        {"nombre":"Txus","pj":0,"pt":24,"bj":10,"bt":35}
       ]
     };
 
@@ -263,6 +285,36 @@
         {nombre:"Ivan",  r:["1-1","1-2","2","2"]},
         {nombre:"Oscar", r:["1-2","1-1","X","X"]},
         {nombre:"Txus",  r:["1-1","1-1","1","1"]}
+      ]},
+      "J6":{ partidos:["ESP-VLC","SEV-VLL","GET-ALA","RSC-MLL"], reales:["2-2","1-2","X","1"], filas:[
+        {nombre:"Fons",  r:["1-2","1-1","X","1"]},
+        {nombre:"Carlos",r:["0-2","1-1","1","1"]},
+        {nombre:"Sergi", r:["2-0","1-2","1","1"]},
+        {nombre:"Wilby", r:["2-2","0-3","X","1"]},
+        {nombre:"Pablo", r:["1-1","2-3","1","X"]},
+        {nombre:"Alex",  r:["2-0","3-1","X","1"]},
+        {nombre:"Gotzon",r:["2-1","0-1","1","1"]},
+        {nombre:"Eneko", r:["1-1","1-1","1","1"]},
+        {nombre:"Manu",  r:["2-2","1-3","X","X"]},
+        {nombre:"Jesus", r:["1-1","1-2","X","1"]},
+        {nombre:"Ivan",  r:["2-1","1-2","1","1"]},
+        {nombre:"Oscar", r:["1-0","1-0","1","1"]},
+        {nombre:"Txus",  r:["1-1","1-1","X","1"]}
+      ]},
+      "J7":{ partidos:["VLL-ATB","FCB-RSC","RAY-SEV","VLC-OVI"], reales:["1-0","2-1","2","2"], filas:[
+        {nombre:"Fons",  r:["1-1","3-1","2","1"]},
+        {nombre:"Carlos",r:["1-0","3-0","1","1"]},
+        {nombre:"Sergi", r:["2-0","3-0","X","1"]},
+        {nombre:"Wilby", r:["2-2","2-2","1","1"]},
+        {nombre:"Pablo", r:["3-1","3-0","1","1"]},
+        {nombre:"Alex",  r:["1-1","4-1","2","1"]},
+        {nombre:"Gotzon",r:["2-1","3-1","1","1"]},
+        {nombre:"Eneko", r:["1-1","2-0","X","1"]},
+        {nombre:"Manu",  r:["3-1","4-1","X","1"]},
+        {nombre:"Jesus", r:["1-2","2-0","X","1"]},
+        {nombre:"Ivan",  r:["2-1","2-1","X","1"]},
+        {nombre:"Oscar", r:["1-1","2-1","X","1"]},
+        {nombre:"Txus",  r:["2-1","3-2","X","1"]}
       ]}
     };
 
@@ -271,7 +323,7 @@
     const tbody = document.getElementById("tbodyLiga");
     const boteTotalEl = document.getElementById("boteTotal");
     const subtituloJornada = document.getElementById("subtituloJornada");
-    let currentJornada = "J5";
+    let currentJornada = "J7";
     let pronosticosFilter = localStorage.getItem("porra_pron_filter") || "all"; // all|max|zero
 
     const normName = s => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
@@ -312,12 +364,12 @@
       const fills = [], strokes = [];
       for(let i=0;i<n;i++){
         if(i<3){
-          const light = 50 - i*6; // verdes ligeramente distintos
+          const light = 50 - i*6;
           fills.push(`hsla(152,60%,${light}%,0.85)`);
           strokes.push(`hsl(152,65%,${Math.max(30,light-10)}%)`);
         } else {
-          const t = (n<=4) ? 1 : (i-3)/(n-4); // 0..1 desde la 4ª hasta la última
-          const light = 85 - 45*t;           // de rojo claro a rojo intenso
+          const t = (n<=4) ? 1 : (i-3)/(n-4);
+          const light = 85 - 45*t;
           const sat   = 70 + 20*t;
           fills.push(`hsla(0,${sat}%,${light}%,0.9)`);
           strokes.push(`hsl(0,${Math.min(95,sat+5)}%,${Math.max(25,light-12)}%)`);
@@ -495,71 +547,79 @@
     selectJugador.innerHTML = jugadores.map(n => `<option value="${n}">${n}</option>`).join('');
     selectJugador.value = jugadores[0];
 
-    function renderJugadorChart(nombre){
-      const puntos = jornadasOrden.map(j => {
-        const fila = (historico[j] || []).find(x => x.nombre === nombre);
-        return fila ? fila.pj : 0;
-      });
+ function renderJugadorChart(nombre){
+  const puntos = jornadasOrden.map(j => {
+    const fila = (historico[j] || []).find(x => x.nombre === nombre);
+    return fila ? fila.pj : 0;
+  });
 
-      // stats
-      const sum = puntos.reduce((a,b)=>a+b,0);
-      const avg = puntos.length ? sum / puntos.length : 0;
-      const max = Math.max(0, ...puntos);
-      const idxsMax = puntos.map((v,i)=> v===max ? jornadasOrden[i] : null).filter(Boolean);
+  // --- estadísticas (media a 1 decimal) ---
+  const sum   = puntos.reduce((a,b)=>a+b,0);
+  const avg   = puntos.length ? Number((sum / puntos.length).toFixed(1)) : 0; // ← 1 decimal
+  const max   = Math.max(0, ...puntos);
+  const idxsMax = puntos.map((v,i)=> v===max ? jornadasOrden[i] : null).filter(Boolean);
 
-      // badges
-      jugadorStats.innerHTML = `
-        <span class="inline-block text-sm bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-medium">
-          Media: ${avg.toFixed(2)}
-        </span>
-        <span class="inline-block text-sm bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-full font-medium">
-          Máximo: ${max} (${idxsMax.join(', ') || '-'})
-        </span>
-      `;
+  // badges
+  jugadorStats.innerHTML = `
+    <span class="inline-block text-sm bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-medium">
+      Media: ${avg.toFixed(1)}
+    </span>
+    <span class="inline-block text-sm bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-full font-medium">
+      Máximo: ${max} (${idxsMax.join(', ') || '-'})
+    </span>
+  `;
 
-      // tabla
-      tbodyJugador.innerHTML = jornadasOrden.map((j,idx)=>`
-        <tr class="${puntos[idx]===max && max>0 ? 'bg-emerald-50' : ''}">
-          <td class="py-2 px-3">${j}</td>
-          <td class="py-2 px-3 text-right font-semibold">${puntos[idx]}</td>
-        </tr>
-      `).join('');
+  // tabla
+  tbodyJugador.innerHTML = jornadasOrden.map((j,idx)=>`
+    <tr class="${puntos[idx]===max && max>0 ? 'bg-emerald-50' : ''}">
+      <td class="py-2 px-3">${j}</td>
+      <td class="py-2 px-3 text-right font-semibold">${puntos[idx]}</td>
+    </tr>
+  `).join('');
 
-      // colores (máximos en verde)
-      const barColors  = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,0.85)' : 'rgba(99,102,241,0.85)');
-      const barBorders = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,1)'   : 'rgba(79,70,229,1)');
+  // colores (máximos en verde)
+  const barColors  = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,0.85)' : 'rgba(99,102,241,0.85)');
+  const barBorders = puntos.map(v => (v===max && max>0) ? 'rgba(16,185,129,1)'   : 'rgba(79,70,229,1)');
 
-      // margen superior dinámico para ver bien las etiquetas
-      const maxVal = Math.max(0, ...puntos);
-      const pad    = Math.max(2, Math.ceil(maxVal * 0.20)); // +20% o mínimo +2
-      const yMax   = maxVal + pad;
+  // margen superior dinámico para ver bien las etiquetas
+  const maxVal = Math.max(0, ...puntos);
+  const pad    = Math.max(2, Math.ceil(maxVal * 0.20)); // +20% o mínimo +2
+  const yMax   = maxVal + pad;
 
-      const ctx = document.getElementById('chartJugador').getContext('2d');
-      const dataCfg = {
-        labels: jornadasOrden,
-        datasets: [
-          { type:'bar', label:`Puntos de ${nombre}`, data: puntos, backgroundColor: barColors, borderColor: barBorders, borderWidth: 1 },
-          { type:'line', label:'Media', data: puntos.map(()=>avg), borderColor:'rgba(100,116,139,1)', borderDash:[6,6], pointRadius:0, borderWidth:1.5 }
-        ]
-      };
-      const optCfg = {
-        responsive: true,
-        layout: { padding: { top: 16 } },
-        scales: { y: { beginAtZero: true, suggestedMax: yMax, ticks: { precision: 0, stepSize: 1 } } },
-        plugins: {
-          legend: { display: false },
-          datalabels: { anchor: 'end', align: 'end', clamp: true, color: '#111827', font: { weight: 'bold' }, formatter: v => v }
-        }
-      };
-
-      if (chartJugador){
-        chartJugador.data = dataCfg;
-        chartJugador.options = optCfg;
-        chartJugador.update();
-      } else {
-        chartJugador = new Chart(ctx, { type: 'bar', data: dataCfg, options: optCfg, plugins:[ChartDataLabels] });
+  const ctx = document.getElementById('chartJugador').getContext('2d');
+  const dataCfg = {
+    labels: jornadasOrden,
+    datasets: [
+      { type:'bar',  label:`Puntos de ${nombre}`, data: puntos,
+        backgroundColor: barColors, borderColor: barBorders, borderWidth: 1 },
+      { type:'line', label:'Media', data: puntos.map(()=>avg),    // ← usa la media redondeada
+        borderColor:'rgba(100,116,139,1)', borderDash:[6,6], pointRadius:0, borderWidth:1.5 }
+    ]
+  };
+  const optCfg = {
+    responsive: true,
+    layout: { padding: { top: 16 } },
+    scales: { y: { beginAtZero: true, suggestedMax: yMax, ticks: { precision: 0, stepSize: 1 } } },
+    plugins: {
+      legend: { display: false },
+      datalabels: {
+        anchor: 'end', align: 'end', clamp: true, color: '#111827', font: { weight: 'bold' },
+        // ← barras como entero, línea de media con 1 decimal
+        formatter: (value, ctx) => ctx.dataset.type === 'line'
+          ? Number(value).toFixed(1)
+          : Math.round(value)
       }
     }
+  };
+
+  if (chartJugador){
+    chartJugador.data = dataCfg;
+    chartJugador.options = optCfg;
+    chartJugador.update();
+  } else {
+    chartJugador = new Chart(ctx, { type: 'bar', data: dataCfg, options: optCfg, plugins:[ChartDataLabels] });
+  }
+}
     selectJugador.addEventListener('change', e => renderJugadorChart(e.target.value));
 
     // Sync de selectores de jornada + anclado
@@ -595,4 +655,3 @@
   </script>
 </body>
 </html>
-
